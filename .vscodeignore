@@ -1,7 +1,9 @@
+coverage/**
 .vscode/**
 .vscode-test/**
 test/**
-.gitignore
-jsconfig.json
-vsc-extension-quickstart.md
+.editorconfig
+.eslintignore
 .eslintrc.json
+.gitignore
+.nvmrc

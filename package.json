@@ -2,108 +2,52 @@
   "name": "sail-ci",
   "displayName": "Sail CI",
   "description": "Sail CI support for Visual Studio Code",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "publisher": "sailci",
   "engines": {
     "vscode": "^1.27.0"
   },
-  "categories": [
-    "Other"
-  ],
+  "preview": true,
+  "license": "MIT",
+  "homepage": "https://github.com/sailci/sailci-vscode",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sailci/sailci-vscode"
+  },
+  "bugs": {
+    "url": "https://github.com/sailci/sailci-vscode/issues"
+  },
+  "galleryBanner": {
+    "color": "#002b36",
+    "theme": "dark"
+  },
+  "icon": "icons/sailci.png",
   "activationEvents": [
-    "onLanguage:sailci"
+    "workspaceContains:**/.sail.yml"
+  ],
+  "categories": [
+    "Formatters",
+    "Linters",
+    "Other",
+    "Programming Languages"
+  ],
+  "extensionDependencies": [
+    "redhat.vscode-yaml"
   ],
   "contributes": {
-    "configuration": {
-      "properties": {
-        "yaml.trace.server": {
-          "type": "string",
-          "enum": [
-            "off",
-            "messages",
-            "verbose"
-          ],
-          "default": "off",
-          "description": "Traces the communication between VSCode and the languageServerExample service."
-        },
-        "yaml.schemas": {
-          "type": "object",
-          "default": {
-            "https://gist.githubusercontent.com/sheepsteak/1d16f0c5de0a59f82508f608e956664a/raw/41dae7c381d1269b51090259f5fdcdc16a1fcda4/Sail%2520CI%2520JSON%2520Schema": "**/.sail.yml"
-          },
-          "description": "Associate schemas to Yaml files in the current workspace"
-        },
-        "yaml.format.enable": {
-          "type": "boolean",
-          "default": false,
-          "description": "Enable/disable default YAML formatter (requires restart)"
-        },
-        "yaml.format.singleQuote": {
-          "type": "boolean",
-          "default": false,
-          "description": "Use single quotes instead of double quotes"
-        },
-        "yaml.format.bracketSpacing": {
-          "type": "boolean",
-          "default": true,
-          "description": "Print spaces between brackets in objects"
-        },
-        "yaml.format.proseWrap": {
-          "type": "string",
-          "default": "preserve",
-          "enum": [
-            "preserve",
-            "never",
-            "always"
-          ],
-          "description": "Always: wrap prose if it exeeds the print width, Never: never wrap the prose, Preserve: wrap prose as-is"
-        },
-        "yaml.validate": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable/disable validation feature"
-        },
-        "yaml.hover": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable/disable hover feature"
-        },
-        "yaml.completion": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable/disable completion feature"
-        },
-        "yaml.customTags": {
-          "type": "array",
-          "default": [],
-          "description": "Custom tags for the parser to use"
-        }
-      }
-    },
-    "languages": [
+    "yamlValidation": [
       {
-        "id": "sailci",
-        "aliases": [
-          "Sail CI"
-        ],
-        "filenamePatterns": [
-          "**/.sail.yml"
-        ],
-        "configuration": "./language-configuration.json"
-      }
-    ],
-    "grammars": [
-      {
-        "language": "sailci",
-        "scopeName": "source.yaml",
-        "path": "./syntaxes/sailci.tmLanguage.json"
+        "fileMatch": "**/.sail.yml",
+        "url": "https://gist.github.com/sheepsteak/1d16f0c5de0a59f82508f608e956664a/raw/schema.json"
       }
     ]
   },
   "main": "./src/index.js",
   "scripts": {
+    "integration-test": "node ./node_modules/vscode/bin/test",
+    "lint": "eslint .",
     "postinstall": "node ./node_modules/vscode/bin/install",
-    "test": "node ./node_modules/vscode/bin/test"
+    "test": "jest --passWithNoTests"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
@@ -113,13 +57,44 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-react": "^7.11.1",
+    "husky": "^1.1.1",
+    "jest": "^23.6.0",
+    "lint-staged": "^7.3.0",
     "prettier": "^1.14.3",
     "vscode": "^1.1.21"
   },
-  "dependencies": {
-    "vscode-languageclient": "^5.1.0",
-    "vscode-nls": "^4.0.0",
-    "vscode-uri": "^1.0.6",
-    "yaml-language-server": "^0.1.0"
+  "dependencies": {},
+  "jest": {
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/**/*.js"
+    ],
+    "coverageReporters": [
+      "text",
+      "lcov"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
+      }
+    },
+    "roots": [
+      "<rootDir>/src/"
+    ]
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   }
 }

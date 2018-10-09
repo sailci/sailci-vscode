@@ -1,4 +1,7 @@
 {
   "extends": ["airbnb", "prettier", "prettier/react"],
-  "parser": "babel-eslint"
+  "parser": "babel-eslint",
+  "rules": {
+    "import/no-unresolved": ["on", { "ignore": ["vscode"] }]
+  }
 }
